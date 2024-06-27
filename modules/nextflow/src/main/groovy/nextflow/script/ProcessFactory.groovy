@@ -23,6 +23,9 @@ import nextflow.Session
 import nextflow.executor.Executor
 import nextflow.executor.ExecutorFactory
 import nextflow.processor.TaskProcessor
+
+import java.lang.reflect.Constructor
+
 /**
  *  Factory class for {@TaskProcessor} instances
  *
@@ -44,6 +47,7 @@ class ProcessFactory {
     protected ProcessFactory() { }
 
     ProcessFactory( BaseScript ownerScript, Session session ) {
+        log.info("FRIEDRICH: ProcessFactory constructor")
         this.owner = ownerScript
         this.session = session
         this.config = session.config
@@ -62,7 +66,22 @@ class ProcessFactory {
      * @return An instance of {@link nextflow.processor.TaskProcessor}
      */
     protected TaskProcessor newTaskProcessor(String name, Executor executor, ProcessConfig config, BodyDef taskBody ) {
-        new TaskProcessor(name, executor, session, owner, config, taskBody)
+        log.info("FRIEDRICH: ProcessFactory::newTaskProcessor")
+        String className = "nextflow.cws.processor.WOWTaskProcessor"
+        Class<?>[] constructorParameters = [String.class, Executor.class, ProcessConfig.class, BodyDef.class]
+
+        try {
+            Class<?> clazz = Class.forName(className)
+
+            Constructor<?> constructor = clazz.getConstructor(constructorParameters)
+            log.info("FRIEDRICH: found the class {}", className)
+            return constructor.newInstance(null, name, executor, config, taskBody) as TaskProcessor
+        }
+        catch (ClassNotFoundException e) {
+            log.info("FRIEDRICH: have not found the class")
+            e.printStackTrace()
+            return new TaskProcessor(name, executor, session, owner, config, taskBody)
+        }
     }
 
     /**

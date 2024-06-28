@@ -208,6 +208,7 @@ class CmdInfo extends CmdBase {
 
         def props = System.getProperties()
         def result = new StringBuilder()
+        result << BLANK << "FRIEDRICH: Definitely the right version: 1" << NEWLINE
         result << BLANK << "Version: ${Const.APP_VER} build ${Const.APP_BUILDNUM}" << NEWLINE
         result << BLANK << "Created: ${Const.APP_TIMESTAMP_UTC} ${Const.deltaLocal()}" << NEWLINE
         result << BLANK << "System: ${props['os.name']} ${props['os.version']}" << NEWLINE

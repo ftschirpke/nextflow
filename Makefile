@@ -38,7 +38,7 @@ clean:
 	./gradlew clean
 
 compile:
-	./gradlew compile exportClasspath
+	./gradlew --no-build-cache --no-configuration-cache compile exportClasspath
 	@echo "DONE `date`"
 
 assemble:
@@ -133,7 +133,7 @@ dockerImage:
 # Create local docker image
 #
 dockerPack:
-	BUILD_PACK=1 ./gradlew publishToMavenLocal dockerPack -Dmaven.repo.local=${PWD}/build/docker/.nextflow/capsule/deps/
+	BUILD_PACK=1 ./gradlew --no-build-cache --no-configuration-cache publishToMavenLocal dockerPack -Dmaven.repo.local=${PWD}/build/docker/.nextflow/capsule/deps/
 
 
 upload-plugins:

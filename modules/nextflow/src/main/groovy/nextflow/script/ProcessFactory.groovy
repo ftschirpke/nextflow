@@ -32,11 +32,11 @@ import nextflow.processor.TaskProcessor
 @CompileStatic
 class ProcessFactory {
 
-    private Session session
+    protected Session session
 
     private Map config
 
-    private BaseScript owner
+    protected BaseScript owner
 
     private ExecutorFactory executorFactory
 

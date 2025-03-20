@@ -1762,8 +1762,7 @@ class TaskProcessor {
      * @param namePattern A file glob pattern
      * @return A {@link Map} object holding the traverse options for the {@link FileHelper#visitFiles(java.util.Map, java.nio.file.Path, java.lang.String, groovy.lang.Closure)} method
      */
-    @PackageScope
-    Map visitOptions( FileOutParam param, String namePattern ) {
+    protected Map visitOptions( FileOutParam param, String namePattern ) {
         final opts = [:]
         opts.relative = false
         opts.hidden = param.hidden ?: namePattern.startsWith('.')
@@ -1796,8 +1795,7 @@ class TaskProcessor {
      * @return
      *      List of the actual output files (not including any input matching an output file name pattern)
      */
-    @PackageScope
-    List<Path> filterByRemovingStagedInputs( TaskRun task, List<Path> collectedFiles, Path workDir ) {
+    protected List<Path> filterByRemovingStagedInputs( TaskRun task, List<Path> collectedFiles, Path workDir ) {
 
         // get the list of input files
         final List<String> allStaged = task.getStagedInputs()

@@ -22,6 +22,7 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.executor.Executor
 import nextflow.executor.ExecutorFactory
+import nextflow.plugin.Plugins
 import nextflow.processor.TaskProcessor
 /**
  *  Factory class for {@TaskProcessor} instances
@@ -62,7 +63,16 @@ class ProcessFactory {
      * @return An instance of {@link nextflow.processor.TaskProcessor}
      */
     protected TaskProcessor newTaskProcessor(String name, Executor executor, ProcessConfig config, BodyDef taskBody ) {
-        new TaskProcessor(name, executor, session, owner, config, taskBody)
+        def extensions = Plugins.manager.getExtensionClasses(TaskProcessor)
+        if (extensions.isEmpty()) {
+            log.info("FRIEDRICH: creating normal task processor")
+            return new TaskProcessor(name, executor, session, owner, config, taskBody)
+        }
+        log.info("FRIEDRICH: found ${extensions.first.class.getName()} and constructing an instance")
+        def constructor = extensions.first.getConstructor(
+            String, Executor, Session, BaseScript, ProcessConfig, BodyDef
+        )
+        return constructor.newInstance(name, executor, session, owner, config, taskBody)
     }
 
     /**

@@ -65,11 +65,9 @@ class ProcessFactory {
     protected TaskProcessor newTaskProcessor(String name, Executor executor, ProcessConfig config, BodyDef taskBody ) {
         def extensions = Plugins.manager.getExtensionClasses(TaskProcessor)
         if (extensions.isEmpty()) {
-            log.info("FRIEDRICH: creating normal task processor")
             return new TaskProcessor(name, executor, session, owner, config, taskBody)
         }
-        log.info("FRIEDRICH: found ${extensions.first.class.getName()} and constructing an instance")
-        def constructor = extensions.first.getConstructor(
+        def constructor = extensions.get(0).getConstructor(
             String, Executor, Session, BaseScript, ProcessConfig, BodyDef
         )
         return constructor.newInstance(name, executor, session, owner, config, taskBody)
